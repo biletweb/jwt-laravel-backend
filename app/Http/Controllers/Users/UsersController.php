@@ -14,9 +14,14 @@ class UsersController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function usersAll()
+    public function usersAll(Request $request)
     {
-        return User::all();
+        if($request->input('search'))
+        {
+            return User::where('name', 'LIKE', "%{$request->search}%")->orderBy('id', 'desc')->paginate(5);
+        }
+
+        return User::orderBy('id', 'desc')->paginate(5);
     }
 
     public function userShow($user)

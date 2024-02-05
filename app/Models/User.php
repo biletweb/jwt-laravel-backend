@@ -63,4 +63,16 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    // Мутатор для атрибута created_at
+    public function getCreatedAtAttribute($value)
+    {
+        return $this->asDateTime($value)->diffForHumans();
+    }
+
+    // Мутатор для атрибута updated_at
+    public function getUpdatedAtAttribute($value)
+    {
+        return $this->asDateTime($value)->diffForHumans();
+    }
 }
