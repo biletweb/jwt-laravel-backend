@@ -120,4 +120,26 @@ class UsersController extends Controller
             return response()->json(['error' => ['message' => 'Are you trying to remove yourself?']], 404);
         }
     }
+
+    public function userAvatarUpdate(Request $request, User $user)
+    {
+        try {
+        $data = $request->validate([
+            'avatar' => 'image|mimes:jpeg,jpg,png|max:2048'
+        ]);
+
+        if ($user->avatar) {
+            \Storage::disk('public')->delete($user->avatar);
+        }
+
+        $data['avatar'] = \Storage::disk('public')->put('img/profile/avatar', $data['avatar']);
+
+        $user->update($data);
+
+        return response()->json(['message' => 'User avatar updated successfully'], 200);
+        } catch (\Illuminate\Validation\ValidationException $exception) {
+            $errors = $exception->errors();
+            return response()->json(['error' => ['message' => $errors['avatar']]], 400);
+        }
+    } 
 }
