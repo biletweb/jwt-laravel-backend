@@ -123,23 +123,27 @@ class UsersController extends Controller
 
     public function userAvatarUpdate(Request $request, User $user)
     {
-        try {
-        $data = $request->validate([
-            'avatar' => 'image|mimes:jpeg,jpg,png|max:2048'
+        $validator = Validator::make($request->all(), [
+            'avatar' => 'image|mimes:jpeg,jpg,png|max:1024'
         ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+
+            if ($errors->has('avatar')) {
+                return response()->json(['error' => ['message' => $errors->first('avatar')]], 400);
+            }
+        }
 
         if ($user->avatar) {
             \Storage::disk('public')->delete($user->avatar);
         }
 
-        $data['avatar'] = \Storage::disk('public')->put('img/profile/avatar', $data['avatar']);
-
+        $data = $validator->validated();
+        $avatarPath = \Storage::disk('public')->putFile('img/profile/avatar', $request->file('avatar'));
+        $data['avatar'] = $avatarPath;
         $user->update($data);
 
         return response()->json(['message' => 'User avatar updated successfully'], 200);
-        } catch (\Illuminate\Validation\ValidationException $exception) {
-            $errors = $exception->errors();
-            return response()->json(['error' => ['message' => $errors['avatar']]], 400);
-        }
     } 
 }
