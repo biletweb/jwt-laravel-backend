@@ -34,6 +34,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'users'], function ($router) {
     Route::post('/create', [UsersController::class, 'userCreate'])->middleware('throttle:5,1');
     Route::get('/edit/{user}', [UsersController::class, 'userEdit']);
     Route::put('/update/{user}', [UsersController::class, 'userUpdate'])->middleware('throttle:5,1');
-    Route::delete('/delete/{user}', [UsersController::class, 'userDelete'])->middleware('throttle:5,1');
+    Route::post('/delete/{user}', [UsersController::class, 'userDelete'])->middleware('throttle:5,1');
     Route::post('/avatar/update/{user}', [UsersController::class, 'userAvatarUpdate'])->middleware('throttle:5,1');
 });
