@@ -109,7 +109,7 @@ class UsersController extends Controller
         return response()->json(['message' => 'User successfully created'], 200);
     }
 
-    public function deleteUser(User $user)
+    public function userDelete(User $user)
     {
         if (!$user) {
             return response()->json(['error' => ['message' => 'User not found']], 404);
