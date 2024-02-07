@@ -25,4 +25,10 @@ php artisan migrate
 php artisan jwt:secret
 ```
 
+### Start a local development server
+
+```sh
+php artisan serve
+```
+
 To work you need to install the frontend <a href="https://github.com/biletweb/jwt-vue-frontend">jwt-vue-frontend</a>
