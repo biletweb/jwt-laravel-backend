@@ -16,12 +16,15 @@ class UsersController extends Controller
 
     public function usersAll(Request $request)
     {
+        $sort = $request->sort;
+        $search = $request->search;
+
         if($request->input('search'))
         {
-            return User::where('name', 'LIKE', "%{$request->search}%")->orderBy('id', 'desc')->paginate(5);
+            return User::where('name', 'LIKE', "%{$search}%")->orderBy('id', $sort)->paginate(5);
         }
 
-        return User::orderBy('id', 'desc')->paginate(5);
+        return User::orderBy('id', $sort)->paginate(5);
     }
 
     public function userShow($user)
