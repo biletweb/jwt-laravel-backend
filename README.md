@@ -3,9 +3,26 @@
 
 ## Project Setup
 
--   composer install
--   .env configure
--   php artisan migrate
--   php artisan jwt:secret
+```sh
+composer install
+```
 
-To work you need to install the frontend <a href="https://github.com/biletweb/jwt-vue-frontend">jwt-vue-frontend</a>.
+### Setup the configuration file
+
+```sh
+rename .env.example to .env and do the setup
+```
+
+### Perform migrations to work with the database
+
+```sh
+php artisan migrate
+```
+
+### Generate a secret key for working with JWT
+
+```sh
+php artisan jwt:secret
+```
+
+To work you need to install the frontend <a href="https://github.com/biletweb/jwt-vue-frontend">jwt-vue-frontend</a>
