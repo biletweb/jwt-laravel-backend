@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use App\Models\User;
+use App\Mail\ConfirmationMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -38,9 +42,31 @@ class AuthController extends Controller
             }
         }
         
-        $user = User::create(array_merge(
+        try {
+            DB::beginTransaction();
+
+            $user = User::create(array_merge(
             $validator->validated(), ['password' => bcrypt($request->password)]
-        ));
+            ));
+
+            $tokenMail = Str::random(32);
+
+            $userId = $user->id;
+
+            // $confirmationLink = route('confirmation', ['tokenMail' => $tokenMail, 'user' => $userId]);
+            $frontendDomain = env('FRONTEND_DOMAIN');
+            $confirmationLink = $frontendDomain . '/auth/email/confirm/' . $tokenMail . '/' . $userId;
+
+            Mail::to($user->email)->send(new ConfirmationMail($confirmationLink));
+
+            $user->update(['verify_email' => $tokenMail]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['error' => ['message' => 'Failed to send confirmation email, try again later']], 400);
+        }
 
         return response()->json(['message' => 'User successfully registered'], 200);
     }
@@ -62,6 +88,12 @@ class AuthController extends Controller
             if ($errors->has('password')) {
                 return response()->json(['error' => ['message' => $errors->first('password')]], 400);
             }
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user->verify_email) {
+            return response()->json(['error' => ['message' => 'You have not confirmed email']], 400);
         }
 
         $credentials = request(['email', 'password']);

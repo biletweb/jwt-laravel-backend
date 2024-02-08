@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\auth\AuthController;
-use App\Http\Controllers\users\UsersController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Users\UsersController;
+use App\Http\Controllers\Auth\ConfirmationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,5 @@ Route::group(['middleware' => 'api', 'prefix' => 'users'], function ($router) {
     Route::post('/delete/{user}', [UsersController::class, 'userDelete'])->middleware('throttle:5,1');
     Route::post('/avatar/update/{user}', [UsersController::class, 'userAvatarUpdate'])->middleware('throttle:5,1');
 });
+
+Route::get('/auth/email/confirm/{token}/{user}', [ConfirmationController::class, 'confirmEmail'])->name('confirmation');

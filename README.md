@@ -13,6 +13,12 @@ composer install
 rename .env.example to .env and do the setup
 ```
 
+### Setup a FRONTEND_DOMAIN to work with the frontend
+
+```sh
+FRONTEND_DOMAIN=http://localhost:5173 in .env
+```
+
 ### Perform migrations to work with the database
 
 ```sh
