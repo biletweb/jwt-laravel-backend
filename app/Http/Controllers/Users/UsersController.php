@@ -44,16 +44,20 @@ class UsersController extends Controller
         return $user;
     }
 
-    public function userUpdate(Request $request, User $user)
+    public function userUpdate(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id
-        ]);
+        $userId = $request->user;
+
+        $user = User::find($userId);
 
         if (!$user) {
             return response()->json(['error' => ['message' => 'User not found']], 404);
         }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id
+        ]);
 
         if ($validator->fails()) {
             $errors = $validator->errors();
@@ -69,7 +73,6 @@ class UsersController extends Controller
 
         $user->update($validator->validated());
        
-        
         return response()->json(['message' => 'User updated successfully'], 200);
     }
 
