@@ -38,5 +38,5 @@ Route::group(['middleware' => 'api', 'prefix' => 'users'], function ($router) {
 
 Route::get('/auth/email/confirm/{token}/{user}', [ConfirmationController::class, 'confirmEmail'])->name('confirmation');
 
-Route::get('/auth/password/reset', [ResetController::class, 'passwordReset'])->name('reset');
+Route::post('/auth/password/reset', [ResetController::class, 'passwordReset']);
 Route::post('/auth/password/new', [ResetController::class, 'passwordNew']);
