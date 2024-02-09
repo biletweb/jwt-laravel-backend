@@ -36,7 +36,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'users'], function ($router) {
     Route::post('/avatar/update/{user}', [UsersController::class, 'userAvatarUpdate'])->middleware('throttle:5,1');
 });
 
-Route::get('/auth/email/confirm/{token}/{user}', [ConfirmationController::class, 'confirmEmail'])->name('confirmation');
+Route::post('/auth/email/confirm', [ConfirmationController::class, 'emailConfirm']);
 
 Route::post('/auth/password/reset', [ResetController::class, 'passwordReset']);
 Route::post('/auth/password/new', [ResetController::class, 'passwordNew']);

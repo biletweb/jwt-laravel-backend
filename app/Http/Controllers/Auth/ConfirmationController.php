@@ -8,22 +8,23 @@ use App\Models\User;
 
 class ConfirmationController extends Controller
 {
-    public function confirmEmail($token, $user)
+    public function emailConfirm(Request $request)
     {
-        $user = User::find($user);
+        $tokenMail = $request->token;
+        $userId = $request->user;
+
+        $user = User::find($userId);
 
         if (!$user) {
             return response()->json(['error' => ['message' => 'User not found']], 404);
         }
 
-        if ($user->verify_email === $token) {
-
-            $user->verify_email = null;
-            
-            $user->save();
-            return response()->json(['message' => 'Email confirmed'], 200);
-        } else {
-            return response()->json(['error' => ['message' => 'Invalid email verification token']], 400);
+        if ($user->verify_email !== $tokenMail) {
+            return response()->json(['error' => ['message' => 'Invalid token']], 400);
         }
+
+        $user->update(['verify_email' => null]);
+
+        return response()->json(['message' => 'Email confirmed'], 200);
     }
 }
