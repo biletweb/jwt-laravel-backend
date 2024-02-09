@@ -33,7 +33,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'users'], function ($router) {
     Route::get('/edit/{user}', [UsersController::class, 'userEdit']);
     Route::post('/update', [UsersController::class, 'userUpdate'])->middleware('throttle:5,1');
     Route::post('/delete', [UsersController::class, 'userDelete'])->middleware('throttle:5,1');
-    Route::post('/avatar/update/{user}', [UsersController::class, 'userAvatarUpdate'])->middleware('throttle:5,1');
+    Route::post('/avatar/update', [UsersController::class, 'userAvatarUpdate'])->middleware('throttle:5,1');
 });
 
 Route::post('/auth/email/confirm', [ConfirmationController::class, 'emailConfirm']);

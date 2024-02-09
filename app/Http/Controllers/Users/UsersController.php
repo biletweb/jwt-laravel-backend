@@ -125,7 +125,7 @@ class UsersController extends Controller
         }
     }
 
-    public function userAvatarUpdate(Request $request, User $user)
+    public function userAvatarUpdate(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'avatar' => 'image|mimes:jpeg,jpg,png|max:1024'
@@ -139,13 +139,19 @@ class UsersController extends Controller
             }
         }
 
+        $userId = $request->user;
+
+        $user = User::find($userId);
+
         if ($user->avatar) {
             \Storage::disk('public')->delete($user->avatar);
         }
 
         $data = $validator->validated();
+
         $avatarPath = \Storage::disk('public')->putFile('img/profile/avatar', $request->file('avatar'));
         $data['avatar'] = $avatarPath;
+        
         $user->update($data);
 
         return response()->json(['message' => 'User avatar updated successfully'], 200);
