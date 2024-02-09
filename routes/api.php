@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Users\UsersController;
 use App\Http\Controllers\Auth\ConfirmationController;
+use App\Http\Controllers\Auth\ResetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,3 +37,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'users'], function ($router) {
 });
 
 Route::get('/auth/email/confirm/{token}/{user}', [ConfirmationController::class, 'confirmEmail'])->name('confirmation');
+
+Route::get('/auth/password/reset', [ResetController::class, 'passwordReset'])->name('reset');
+Route::post('/auth/password/new', [ResetController::class, 'passwordNew']);

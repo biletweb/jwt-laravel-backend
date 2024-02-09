@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('avatar')->nullable();
             $table->string('verify_email')->nullable();
+            $table->string('verify_password')->nullable();
             $table->timestamps();
         });
     }
