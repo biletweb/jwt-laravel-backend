@@ -104,18 +104,21 @@ class UsersController extends Controller
         return response()->json(['message' => 'User successfully created'], 200);
     }
 
-    public function userDelete(User $user)
+    public function userDelete(Request $request)
     {
+        $userId = $request->user;
+
+        $user = User::find($userId);
+
         if (!$user) {
             return response()->json(['error' => ['message' => 'User not found']], 404);
         }
         
         if ($user->id !== auth()->user()->id) {
             $user->delete();
-
             return response()->json(['message' => 'User deleted successfully'], 200);
         } else {
-            return response()->json(['error' => ['message' => 'Are you trying to remove yourself?']], 404);
+            return response()->json(['error' => ['message' => 'You can\'t delete yourself']], 400);
         }
     }
 
