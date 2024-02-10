@@ -26,9 +26,7 @@ class ResetMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        return new Envelope(
-            subject: 'Password reset',
-        );
+        return new Envelope(subject: 'Password reset');
     }
 
     /**
@@ -36,7 +34,9 @@ class ResetMail extends Mailable
      */
     public function content(): Content
     {
-        return (new Content())->view('emails.reset')->with(['resetLink' => $this->resetLink]);
+        return (new Content())
+            ->view('emails.reset')
+            ->with(['resetLink' => $this->resetLink]);
     }
 
     /**

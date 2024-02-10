@@ -16,7 +16,7 @@ class ResetController extends Controller
     public function passwordReset(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:255'
+            'email' => 'required|string|email|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -62,7 +62,7 @@ class ResetController extends Controller
     public function passwordNew(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'password' => 'required|confirmed|string|min:6'
+            'password' => 'required|confirmed|string|min:6',
         ]);
 
         if ($validator->fails()) {
@@ -84,7 +84,7 @@ class ResetController extends Controller
 
         if ($user->verify_password !== $tokenMail) {
             return response()->json(['error' => ['message' => 'Invalid token']], 400);
-        } 
+        }
 
         $newPassword = bcrypt($request->password);
 

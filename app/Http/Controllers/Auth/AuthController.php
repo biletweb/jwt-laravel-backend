@@ -23,7 +23,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|confirmed|string|min:6'
+            'password' => 'required|confirmed|string|min:6',
         ]);
 
         if ($validator->fails()) {
@@ -41,19 +41,16 @@ class AuthController extends Controller
                 return response()->json(['error' => ['message' => $errors->first('password')]], 400);
             }
         }
-        
+
         try {
             DB::beginTransaction();
 
-            $user = User::create(array_merge(
-            $validator->validated(), ['password' => bcrypt($request->password)]
-            ));
+            $user = User::create(array_merge($validator->validated(), ['password' => bcrypt($request->password)]));
 
             $tokenMail = Str::random(32);
 
             $userId = $user->id;
 
-            // $confirmationLink = route('confirmation', ['tokenMail' => $tokenMail, 'user' => $userId]);
             $frontendDomain = env('FRONTEND_DOMAIN');
             $confirmationLink = $frontendDomain . '/auth/email/confirm/' . $tokenMail . '/' . $userId;
 
@@ -71,11 +68,11 @@ class AuthController extends Controller
         return response()->json(['message' => 'User successfully registered'], 200);
     }
 
-    public function login(Request $request )
+    public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:6|max:255'
+            'password' => 'required|string|min:6|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -98,7 +95,7 @@ class AuthController extends Controller
 
         $credentials = request(['email', 'password']);
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!($token = auth()->attempt($credentials))) {
             return response()->json(['error' => ['message' => 'Unauthorized']], 401);
         }
 
@@ -127,7 +124,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 1
+            'expires_in' => auth()->factory()->getTTL() * 1,
         ]);
     }
 }

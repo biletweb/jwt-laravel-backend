@@ -14,9 +14,10 @@ class UsersController extends Controller
         $sort = $request->sort;
         $search = $request->search;
 
-        if($request->input('search'))
-        {
-            return User::where('name', 'LIKE', "%{$search}%")->orderBy('id', $sort)->paginate(5);
+        if ($request->input('search')) {
+            return User::where('name', 'LIKE', "%{$search}%")
+                ->orderBy('id', $sort)
+                ->paginate(5);
         }
 
         return User::orderBy('id', $sort)->paginate(5);
@@ -29,7 +30,7 @@ class UsersController extends Controller
         if (!$user) {
             return response()->json(['error' => ['message' => 'User not found']], 404);
         }
-        
+
         return $user;
     }
 
@@ -40,7 +41,7 @@ class UsersController extends Controller
         if (!$user) {
             return response()->json(['error' => ['message' => 'User not found']], 404);
         }
-       
+
         return $user;
     }
 
@@ -56,7 +57,7 @@ class UsersController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
 
         if ($validator->fails()) {
@@ -72,7 +73,7 @@ class UsersController extends Controller
         }
 
         $user->update($validator->validated());
-       
+
         return response()->json(['message' => 'User updated successfully'], 200);
     }
 
@@ -81,7 +82,7 @@ class UsersController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|confirmed|string|min:6'
+            'password' => 'required|confirmed|string|min:6',
         ]);
 
         if ($validator->fails()) {
@@ -99,10 +100,8 @@ class UsersController extends Controller
                 return response()->json(['error' => ['message' => $errors->first('password')]], 400);
             }
         }
-        
-        $user = User::create(array_merge(
-            $validator->validated(), ['password' => bcrypt($request->password)]
-        ));
+
+        $user = User::create(array_merge($validator->validated(), ['password' => bcrypt($request->password)]));
 
         return response()->json(['message' => 'User successfully created'], 200);
     }
@@ -116,7 +115,7 @@ class UsersController extends Controller
         if (!$user) {
             return response()->json(['error' => ['message' => 'User not found']], 404);
         }
-        
+
         if ($user->id !== auth()->user()->id) {
             $user->delete();
             return response()->json(['message' => 'User deleted successfully'], 200);
@@ -128,7 +127,7 @@ class UsersController extends Controller
     public function userAvatarUpdate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'avatar' => 'image|mimes:jpeg,jpg,png|max:1024'
+            'avatar' => 'image|mimes:jpeg,jpg,png|max:1024',
         ]);
 
         if ($validator->fails()) {
@@ -151,9 +150,9 @@ class UsersController extends Controller
 
         $avatarPath = \Storage::disk('public')->putFile('img/profile/avatar', $request->file('avatar'));
         $data['avatar'] = $avatarPath;
-        
+
         $user->update($data);
 
         return response()->json(['message' => 'User avatar updated successfully'], 200);
-    } 
+    }
 }

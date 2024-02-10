@@ -26,9 +26,7 @@ class ConfirmationMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        return new Envelope(
-            subject: 'Confirm your email',
-        );
+        return new Envelope(subject: 'Confirm your email');
     }
 
     /**
@@ -36,7 +34,9 @@ class ConfirmationMail extends Mailable
      */
     public function content(): Content
     {
-        return (new Content())->view('emails.confirmation')->with(['confirmationLink' => $this->confirmationLink]);
+        return (new Content())
+            ->view('emails.confirmation')
+            ->with(['confirmationLink' => $this->confirmationLink]);
     }
 
     /**
